@@ -7,6 +7,7 @@ class GameState:
         self.numRows = int(input('Enter number of rows: '))
         self.numColumns = int(input('Enter number of columns: '))
         self.gridState = []
+        self.asking = True
 
 currentGameState = GameState()
 
@@ -32,16 +33,16 @@ def newPosCalc(symbol):
     direction = input('Up (w), right (d), left (a) or down (s): ').lower()
 
     if direction == 'w':
-            if currentGameState.rowIndex - 1 < 0:
-                print('Area out of bounds')
-                currentGameState.notInBounds = True
-                currentGameState.notInBounds = True
-            elif currentGameState.gridState[currentGameState.rowIndex - 1][currentGameState.columnIndex] != ' ':
-                print('Already travelled here')
-                currentGameState.travelled = True
-            else:
-                currentGameState.rowIndex -= 1
-                symbol = '^'
+        if currentGameState.rowIndex - 1 < 0:
+            print('Area out of bounds')
+            currentGameState.notInBounds = True
+            currentGameState.notInBounds = True
+        elif currentGameState.gridState[currentGameState.rowIndex - 1][currentGameState.columnIndex] != ' ':
+            print('Already travelled here')
+            currentGameState.travelled = True
+        else:
+            currentGameState.rowIndex -= 1
+            symbol = '^'
 
     elif direction == 's':
         if currentGameState.rowIndex + 1 >= currentGameState.numRows:
@@ -78,6 +79,7 @@ def newPosCalc(symbol):
 
     else:
         print('Sorry, input not identified please try again later')
+        currentGameState.asking = False
 
     currentGameState.gridState[currentGameState.rowIndex][currentGameState.columnIndex] = symbol
     newPos = currentGameState.gridState[currentGameState.rowIndex][currentGameState.columnIndex]
@@ -154,12 +156,12 @@ def checkGridFull():
                 
     if gridFull == True:
         print('Grid is full')
-        asking = False
+        currentGameState.asking = False
 
 def checkInBoundsandNotTravelled(symbol):
 
     while currentGameState.travelled == True or currentGameState.notInBounds == True:
-            newPosAfterCheck(currentGameState.rowIndex, currentGameState.columnIndex, symbol)
+            newPosAfterCheck(symbol)
 
 def run():
     # Initialization
@@ -172,9 +174,7 @@ def run():
 
     printGrid()
 
-    asking = True
-
-    while asking:
+    while currentGameState.asking:
 
         currentGameState.gridState[0][0] = '>'
 

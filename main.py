@@ -47,7 +47,7 @@ def run():
             if rowIndex - 1 < 0:
                 print('Area out of bounds')
                 notInBounds = True
-            elif gridState[rowIndex - 1][columnIndex] == 'X':
+            elif gridState[rowIndex - 1][columnIndex] != ' ':
                 print('Already travelled here')
                 travelled = True
             else:
@@ -58,7 +58,7 @@ def run():
             if rowIndex + 1 >= numRows:
                 print('Area out of bounds')
                 notInBounds = True
-            elif gridState[rowIndex + 1][columnIndex] == 'X':
+            elif gridState[rowIndex + 1][columnIndex] != ' ':
                 print('Already travelled here')
                 travelled = True
             else:
@@ -69,7 +69,7 @@ def run():
             if columnIndex - 1 < 0:
                 print('Area out of bounds')
                 notInBounds = True
-            elif gridState[rowIndex][columnIndex - 1] == 'X':
+            elif gridState[rowIndex][columnIndex - 1] != ' ':
                 print('Already travelled here')
                 travelled = True
             else:
@@ -80,7 +80,7 @@ def run():
             if columnIndex + 1 >= numColumns:
                 print('Area out of bounds')
                 notInBounds = True
-            elif gridState[rowIndex][columnIndex + 1] == 'X':
+            elif gridState[rowIndex][columnIndex + 1] != ' ':
                 print('Already travelled here')
                 travelled = True
             else:
@@ -100,7 +100,7 @@ def run():
                 if rowIndex - 1 < 0:
                     print('Area out of bounds')
                     notInBounds = True
-                elif gridState[rowIndex - 1][columnIndex] == 'X':
+                elif gridState[rowIndex - 1][columnIndex] != ' ':
                     print('Already travelled here')
                     travelled = True
                 else:
@@ -113,7 +113,7 @@ def run():
                 if rowIndex + 1 >= numRows:
                     print('Area out of bounds')
                     notInBounds = True
-                elif gridState[rowIndex + 1][columnIndex] == 'X':
+                elif gridState[rowIndex + 1][columnIndex] != ' ':
                     print('Already travelled here')
                     travelled = True
                 else:
@@ -126,7 +126,7 @@ def run():
                 if columnIndex - 1 < 0:
                     print('Area out of bounds')
                     notInBounds = True
-                elif gridState[rowIndex][columnIndex - 1] == 'X':
+                elif gridState[rowIndex][columnIndex - 1] != ' ':
                     print('Already travelled here')
                     travelled = True
                 else:
@@ -139,7 +139,7 @@ def run():
                 if columnIndex + 1 >= numColumns:
                     print('Area out of bounds')
                     notInBounds = True
-                elif gridState[rowIndex][columnIndex + 1] == 'X':
+                elif gridState[rowIndex][columnIndex + 1] != ' ':
                     print('Already travelled here')
                     travelled = True
                 else:
