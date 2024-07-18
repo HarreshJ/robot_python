@@ -12,17 +12,6 @@ class Pos:
         self.rowIndex = rowIndex
         self.columnIndex = columnIndex
 
-# variable
-# game is over?
-
-# Grid
-# rows
-# columns
-# current position
-# data array
-# is full?
-
-
 currentGameState = GameState()
 
 def makeGrid(numRows, numColumns):
@@ -83,16 +72,6 @@ def travelled(gridState, newPos):
 def move_to_next_pos(gridState, newPos, theSymbol):
     gridState[newPos.rowIndex][newPos.columnIndex] = theSymbol
 
-def increment_current_pos(userInput, currentPos):
-    if userInput == 'w':
-        currentPos.rowIndex -= 1
-    elif userInput == 's':
-        currentPos.rowIndex += 1
-    elif userInput == 'a':
-        currentPos.columnIndex -= 1
-    elif userInput == 'd':
-        currentPos.columnIndex += 1
-
 def checkGridFull(gridState):
 
     for row in gridState:
@@ -140,8 +119,8 @@ def run():
         move_to_next_pos(currentGameState.gridState, nextPos, symbol)
 
         #incrementing the current position so it moves along with the next move
-        increment_current_pos(direction, currentPos)
-        
+        currentPos = nextPos
+                
         # print grid
         printGrid()
 
@@ -150,16 +129,5 @@ def run():
         if gridFull:
             print('Grid is full')
             gameOver = True
-
-def testPosCheck():
-
-    res = travelled(currentGameState.gridState, Pos(2,2))
-    print(res)
-    
-    
-    res = notInBounds(3, 3, Pos(2,2))
-    print(res)
-
-#testPosCheck()
 
 run()
