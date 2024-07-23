@@ -113,10 +113,27 @@ def run():
 
     print('UP = W \nLEFT = A \nDOWN = S \nRIGHT = D \nJUMP = J and DIAGONAL = LRU or LRD or LLU or LLD \nNOTE: CANNOT JUMP IN DIAGONAL')
 
+    
     while not gameOver:
 
-        # Ask person to input direction
+        # Ask for input and check input validity
+
         direction = input('Enter your input here: ').lower() 
+        validMoves = ['w', 'a', 's', 'd', 'lru', 'lrd', 'llu', 'lld']
+        invalidInput = False
+
+        if direction not in validMoves:
+            print('INPUT NOT VALID')
+            invalidInput = True
+
+            while invalidInput:
+                direction = input('Enter your input here: ').lower()
+
+                if direction in validMoves:
+                    invalidInput = False 
+
+                else:
+                    print('Input still invalid')
 
         # Caculate new position
         nextPos = calculate_next_position(direction, currentPos, symbol)
@@ -151,5 +168,6 @@ def run():
         if gridFull:
             print('Grid is full')
             gameOver = True
+    
 
 run()
