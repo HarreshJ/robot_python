@@ -7,11 +7,6 @@ class GameState:
         self.gridState = []
         self.asking = True
 
-class Pos:
-    def __init__(self, rowIndex, columnIndex):
-        self.rowIndex = rowIndex
-        self.columnIndex = columnIndex
-
 currentGameState = GameState()
 
 def makeGrid(numRows, numColumns):
@@ -35,22 +30,30 @@ def printGrid():
 
 def calculate_next_position(userInput, currentPos, theSymbol):
     if userInput == 'w':
-        return Pos(currentPos.rowIndex - 1, currentPos.columnIndex)
+        return (currentPos[0] - 1, currentPos[1])
     elif userInput == 's':
-        return Pos(currentPos.rowIndex + 1, currentPos.columnIndex)
+        return (currentPos[0] + 1, currentPos[1])
     elif userInput == 'a':
-        return Pos(currentPos.rowIndex, currentPos.columnIndex - 1)
+        return (currentPos[0], currentPos[1] - 1)
     elif userInput == 'd':
-        return Pos(currentPos.rowIndex, currentPos.columnIndex + 1)
+        return (currentPos[0], currentPos[1] + 1)
     elif userInput == 'j':
         if theSymbol == '^':
-            return Pos(currentPos.rowIndex - 2, currentPos.columnIndex)
-        elif theSymbol == '/':
-            return Pos(currentPos.rowIndex + 2, currentPos.columnIndex)
+            return (currentPos[0] - 2, currentPos[1])
+        elif theSymbol == '|':
+            return (currentPos[0] + 2, currentPos[1])
         elif theSymbol == '<':
-            return Pos(currentPos.rowIndex, currentPos.columnIndex - 2)
+            return (currentPos[0], currentPos[1] - 2)
         elif theSymbol == '>':
-            return Pos(currentPos.rowIndex, currentPos.columnIndex + 2)  
+            return (currentPos[0], currentPos[1] + 2)
+    elif userInput == 'lru':
+        return (currentPos[0] - 1, currentPos[1] + 1)
+    elif userInput == 'lrd':
+        return (currentPos[0] + 1, currentPos[1] + 1)
+    elif userInput == 'llu':
+        return (currentPos[0] - 1, currentPos[1] - 1)
+    elif userInput == 'lld':
+        return (currentPos[0] + 1, currentPos[1] - 1)          
         
     else:
         print('Input not valid try again later')
@@ -59,28 +62,31 @@ def nextSymbol(userInput, currentSymbol):
     if userInput == 'w':
         return '^'
     elif userInput == 's':
-        return '/'
+        return '|'
     elif userInput == 'a':
         return '<'
     elif userInput == 'd':
         return '>'
+    elif userInput == 'lru' or 'lrd' or 'llu' or 'lld':
+        return '/'
+
     elif userInput == 'j':
         return currentSymbol
 
 def notInBounds(numRows, numColumns, newPos):
-    if (newPos.rowIndex < 0) or (newPos.rowIndex >= numRows) or (newPos.columnIndex < 0) or (newPos.columnIndex >= numColumns):
+    if (newPos[0] < 0) or (newPos[0] >= numRows) or (newPos[1] < 0) or (newPos[1] >= numColumns):
         return True
     else:
         return False
 
 def travelled(gridState, newPos):
-    if gridState[newPos.rowIndex][newPos.columnIndex] != ' ':    
+    if gridState[newPos[0]][newPos[1]] != ' ':    
         return True
     else:
         return False
     
 def move_to_next_pos(gridState, newPos, theSymbol):
-    gridState[newPos.rowIndex][newPos.columnIndex] = theSymbol
+    gridState[newPos[0]][newPos[1]] = theSymbol
 
 def checkGridFull(gridState):
 
@@ -95,19 +101,22 @@ def run():
     # Initialization
     symbol = '>'
     gameOver = False
-    currentPos = Pos(0,0)
+    rowIndex = 0
+    columnIndex = 0
+    currentPos = rowIndex, columnIndex
     numRows = int(input('Number of rows: '))
     numColumns = int(input('Number of columns: '))
-
     currentGameState.gridState = makeGrid(numRows, numColumns)
     currentGameState.gridState[0][0] = '>'
 
     printGrid()
 
+    print('UP = W \nLEFT = A \nDOWN = S \nRIGHT = D \nJUMP = J and DIAGONAL = LRU or LRD or LLU or LLD \nNOTE: CANNOT JUMP IN DIAGONAL')
+
     while not gameOver:
 
         # Ask person to input direction
-        direction = input('Up (w), right (d), left (a), down (s) or jump (j): ').lower() 
+        direction = input('Enter your input here: ').lower() 
 
         # Caculate new position
         nextPos = calculate_next_position(direction, currentPos, symbol)
@@ -122,6 +131,9 @@ def run():
         hasBeenTravelled = travelled(currentGameState.gridState, nextPos)
         if hasBeenTravelled:
             print('Path has already been travelled')
+            print('')
+            print('Here is the grid before this move:')
+            printGrid()
             continue
 
         # Move to new position
