@@ -1,3 +1,9 @@
+from flask import Flask     
+app = Flask(__name__)   # Flask constructor 
+  
+# A decorator used to tell the application 
+# which URL is associated function 
+@app.route('/run')       
 class GameState:
     def __init__(self):
         self.travelled = False
@@ -67,10 +73,11 @@ def nextSymbol(userInput, currentSymbol):
         return '<'
     elif userInput == 'd':
         return '>'
-    elif userInput == 'j':
-        return currentSymbol
     elif userInput == 'lru' or 'lrd' or 'llu' or 'lld':
         return '/'
+
+    elif userInput == 'j':
+        return currentSymbol
 
 def notInBounds(numRows, numColumns, newPos):
     if (newPos[0] < 0) or (newPos[0] >= numRows) or (newPos[1] < 0) or (newPos[1] >= numColumns):
@@ -110,7 +117,7 @@ def run():
 
     printGrid()
 
-    print('UP = W \nLEFT = A \nDOWN = S \nRIGHT = D \nJUMP = J \nDIAGONAL = LRU or LRD or LLU or LLD \nNOTE: CANNOT JUMP IN DIAGONAL')
+    print('UP = W \nLEFT = A \nDOWN = S \nRIGHT = D \nJUMP = J and DIAGONAL = LRU or LRD or LLU or LLD \nNOTE: CANNOT JUMP IN DIAGONAL')
 
     
     while not gameOver:
@@ -118,7 +125,7 @@ def run():
         # Ask for input and check input validity
 
         direction = input('Enter your input here: ').lower() 
-        validMoves = ['w', 'a', 's', 'd', 'j', 'lru', 'lrd', 'llu', 'lld']
+        validMoves = ['w', 'a', 's', 'd', 'lru', 'lrd', 'llu', 'lld']
         invalidInput = False
 
         if direction not in validMoves:
@@ -146,7 +153,8 @@ def run():
         # Check if path has already been travelled
         hasBeenTravelled = travelled(currentGameState.gridState, nextPos)
         if hasBeenTravelled:
-            print('Path has already been travelled\n')
+            print('Path has already been travelled')
+            print('')
             print('Here is the grid before this move:')
             printGrid()
             continue
@@ -157,7 +165,7 @@ def run():
 
         #incrementing the current position so it moves along with the next move
         currentPos = nextPos
-        
+                
         # print grid
         printGrid()
 
@@ -168,3 +176,6 @@ def run():
             gameOver = True
 
 run()
+  
+if __name__=='__main__': 
+   app.run() 
