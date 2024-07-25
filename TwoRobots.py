@@ -68,8 +68,7 @@ def calculate_next_position(userInput, currentPos, theSymbol):
     else:
         print('Input not valid try again later')
 
-def nextSymbol(userInput, currentSymbol):
-    diagonals = ['lru', 'lru2', 'lrd', 'lrd2', 'llu', 'llu2', 'lld', 'lld2']
+def nextSymbol(userInput, currentSymbol, diagonals):
     if userInput == 'w' or 'w2':
         return '^'
     elif userInput == 's' or 's2':
@@ -117,27 +116,36 @@ def run():
     rowIndex2 = 0
     columnIndex2 = 0
     currentPos2 = rowIndex2, columnIndex2
-    numRows1 = int(input('Number of rows: '))
-    numColumns1 = int(input('Number of columns: '))
-    numRows2 = int(input('Number of rows: '))
-    numColumns2 = int(input('Number of columns: '))
+
+    numRows1 = int(input('Number of rows for Grid 1: '))
+    numColumns1 = int(input('Number of columns for Grid 1: '))
+    numRows2 = int(input('Number of rows for Grid 2: '))
+    numColumns2 = int(input('Number of columns for Grid 2: '))
+
+
     robotOne.gridState = makeGrid(numRows1, numColumns1)
     robotTwo.gridState = makeGrid(numRows2, numColumns2)
     robotOne.gridState[0][0] = '>'
     robotTwo.gridState[0][0] = '>'
+    playerTurn = 1
+    gridFull1 = False
+    gridFull2 = False
+    diagonals = ['lru', 'lru2', 'lrd', 'lrd2', 'llu', 'llu2', 'lld', 'lld2']
 
-    printGrid(robotOne)
-    printGrid(robotTwo)
-
-
-    print('UP = W \nLEFT = A \nDOWN = S \nRIGHT = D \nJUMP = J \nDIAGONAL = LRU or LRD or LLU or LLD \nNOTE: CANNOT JUMP IN DIAGONAL \nAdd a 2 at the end of the input for the second robot')
-
+    print('UP = W \nLEFT = A \nDOWN = S \nRIGHT = D \nJUMP = J \nDIAGONAL = LRU or LRD or LLU or LLD \nNOTE: CANNOT JUMP IN DIAGONAL')
     
     while not gameOver:
+        if playerTurn == 1:
+            print('Robot 1: ')
+            printGrid(robotOne)
+    
+        else:
+            print('Robot 2: ')
+            printGrid(robotTwo)
 
         # Ask for input and check input validity
 
-        direction = input('Enter your input here: ').lower() 
+        direction = input('Enter your input here for robot' + str(playerTurn) + ': ').lower() 
         validMoves = ['w', 'a', 's', 'd', 'j', 'lru', 'lrd', 'llu', 'lld', 'w2', 'a2', 's2', 'd2', 'j2', 'lru2', 'lrd2', 'llu2', 'lld2']
         invalidInput = False
 
@@ -155,45 +163,70 @@ def run():
                     print('Input still invalid')
 
         # Caculate new position
-        nextPos1 = calculate_next_position(direction, currentPos1, symbol)
-        nextPos2 = calculate_next_position(direction, currentPos2, symbol)
-
         # Check if new position is in bounds
-        isNotInBounds = notInBounds(numRows1, numColumns1, nextPos1)
-        isNotInBounds = notInBounds(numRows2, numColumns2, nextPos2)
+        # Check if path has already been travelled
+
+        if playerTurn == 1:
+            nextPos1 = calculate_next_position(direction, currentPos1, symbol)
+            isNotInBounds = notInBounds(numRows1, numColumns1, nextPos1)
+            hasBeenTravelled = travelled(robotOne.gridState, nextPos1)
+        else:
+            nextPos2 = calculate_next_position(direction, currentPos2, symbol)
+            isNotInBounds = notInBounds(numRows2, numColumns2, nextPos2)
+            hasBeenTravelled = travelled(robotTwo.gridState, nextPos2)
+        
         if isNotInBounds:           
             print('Area not in bounds')
             continue
         
-        # Check if path has already been travelled
-        hasBeenTravelled = travelled(robotOne.gridState, nextPos1)
-        hasBeenTravelled = travelled(robotTwo.gridState, nextPos2)
         if hasBeenTravelled:
             print('Path has already been travelled\n')
             print('Here is the grid before this move:')
-            printGrid(robotOne)
-            printGrid(robotTwo)
+            if playerTurn == 1:
+                print('Robot 1: ')
+                printGrid(robotOne)
+            else:
+                print('Robot 2: ')
+                printGrid(robotTwo)
             continue
 
         # Move to new position
-        symbol = nextSymbol(direction, symbol)
-        move_to_next_pos(robotOne.gridState, nextPos1, symbol)
-        move_to_next_pos(robotTwo.gridState, nextPos2, symbol)
-
         #incrementing the current position so it moves along with the next move
-        currentPos1 = nextPos1
-        currentPos2 = nextPos2
-                
         # print grid
-        printGrid(robotOne)
-        printGrid(robotTwo)
-
         # Check if Grid is full
-        gridFull = checkGridFull(robotOne.gridState)
-        gridFull = checkGridFull(robotTwo.gridState)
 
-        if gridFull:
+        symbol = nextSymbol(direction, symbol, diagonals)
+        if playerTurn == 1:
+            move_to_next_pos(robotOne.gridState, nextPos1, symbol)
+            currentPos1 = nextPos1
+            print('Robot 1: ')
+            printGrid(robotOne)
+            gridFull1 = checkGridFull(robotOne.gridState)
+        else:
+            move_to_next_pos(robotTwo.gridState, nextPos2, symbol)
+            currentPos2 = nextPos2
+            print('Robot 2: ')
+            printGrid(robotTwo)
+            gridFull2 = checkGridFull(robotTwo.gridState)    
+
+        if gridFull1 or gridFull2:
             print('Grid is full')
-            gameOver = True
+
+        # Player swap
+        if gridFull1 or gridFull2:
+            if gridFull1 and gridFull2:
+                gameOver = True
+            elif gridFull1:
+                playerTurn = 2
+                continue
+            elif gridFull2:
+                playerTurn = 1
+                continue
+        
+        else:
+            if playerTurn == 1:
+                playerTurn = 2
+            else:
+                playerTurn = 1
 
 run()
