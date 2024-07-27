@@ -19,6 +19,13 @@ class GameStateRob2:
 robotOne = GameStateRob1()
 robotTwo = GameStateRob2()
 
+directionToSymbol = {
+    'w': '^',
+    'a': '<',
+    's': '|',
+    'd': '>'
+}
+
 def makeGrid(numRows, numColumns):
     gridState = []
 
@@ -69,19 +76,13 @@ def calculate_next_position(userInput, currentPos, theSymbol):
         print('Input not valid try again later')
 
 def nextSymbol(userInput, currentSymbol, diagonals):
-    if userInput == 'w' or 'w2':
-        return '^'
-    elif userInput == 's' or 's2':
-        return '|'
-    elif userInput == 'a' or 'a2':
-        return '<'
-    elif userInput == 'd' or 'd2':
-        return '>'
-    elif userInput == 'j' or 'j2':
+    if userInput in directionToSymbol:
+       return directionToSymbol[userInput]
+    elif userInput == 'j':
         return currentSymbol
     elif userInput in diagonals:
         return '/'
-
+   
 def notInBounds(numRows, numColumns, newPos):
     if (newPos[0] < 0) or (newPos[0] >= numRows) or (newPos[1] < 0) or (newPos[1] >= numColumns):
         return True
@@ -130,9 +131,9 @@ def run():
     playerTurn = 1
     gridFull1 = False
     gridFull2 = False
-    diagonals = ['lru', 'lru2', 'lrd', 'lrd2', 'llu', 'llu2', 'lld', 'lld2']
+    diagonals = ['lru', 'lrd', 'llu', 'lld']
 
-    print('UP = W \nLEFT = A \nDOWN = S \nRIGHT = D \nJUMP = J \nDIAGONAL = LRU or LRD or LLU or LLD \nNOTE: CANNOT JUMP IN DIAGONAL')
+    print('UP = W \nLEFT = A \nDOWN = S \nRIGHT = D \nJUMP = J \nDIAGONAL = LRU or LRD or LLU or LLD')
     
     while not gameOver:
         if playerTurn == 1:
@@ -146,7 +147,7 @@ def run():
         # Ask for input and check input validity
 
         direction = input('Enter your input here for robot' + str(playerTurn) + ': ').lower() 
-        validMoves = ['w', 'a', 's', 'd', 'j', 'lru', 'lrd', 'llu', 'lld', 'w2', 'a2', 's2', 'd2', 'j2', 'lru2', 'lrd2', 'llu2', 'lld2']
+        validMoves = ['w', 'a', 's', 'd', 'j', 'lru', 'lrd', 'llu', 'lld']
         invalidInput = False
 
         if direction not in validMoves:
